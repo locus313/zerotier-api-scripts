@@ -30,6 +30,8 @@ function _switch() {
             curl -s -H "Authorization: Bearer ${ZEROTIER_TOKEN}" -H "Content-Type: application/json" "${API_URL_PREFIX}/api/network/${NETWORK_ID}/member" | jq -r '.[]| "\(.name)***\(.config.id)***\(.config.authorized)***\(.config.ipAssignments[0])"' | column -t -s "***" | sort;
             ;;
         ""|"um"|"update-member"|"3")
+            [ -z ${_NODE_ID} ] && echo "Missing node id" && exit 1
+            [ -z ${_NODE_NAME} ] && echo "Missing node name" && exit 1
             curl -s -X POST -H "Authorization: Bearer ${ZEROTIER_TOKEN}" -H "Content-Type: application/json" "${API_URL_PREFIX}/api/network/${NETWORK_ID}/member/${_NODE_ID}" -d '{"config": {"authorized": true}, "name": "'${_NODE_NAME}'"}';
             exit
             ;;
